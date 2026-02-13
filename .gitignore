@@ -5,8 +5,9 @@ target/
 result
 .direnv/
 
-# Node (docs)
+# Node
 node_modules/
+ui/dist/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 

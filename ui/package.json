@@ -1,0 +1,11 @@
+{
+  "name": "deskspace-ui",
+  "private": true,
+  "scripts": {
+    "build": "bun build app.js --outdir=dist --minify"
+  },
+  "dependencies": {
+    "marked": "^15.0.0",
+    "highlight.js": "^11.11.0"
+  }
+}

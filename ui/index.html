@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>deskspace</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/ui/node_modules/highlight.js/styles/github-dark.min.css" id="hljs-theme-dark">
+  <link rel="stylesheet" href="/ui/node_modules/highlight.js/styles/github.min.css" id="hljs-theme-light" disabled>
+  <script>
+    // Swap highlight.js theme based on system preference
+    const mql = window.matchMedia('(prefers-color-scheme: light)');
+    function applyHljsTheme(light) {
+      document.getElementById('hljs-theme-dark').disabled = light;
+      document.getElementById('hljs-theme-light').disabled = !light;
+    }
+    mql.addEventListener('change', e => applyHljsTheme(e.matches));
+    applyHljsTheme(mql.matches);
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/dist/app.js"></script>
+</body>
+</html>
