@@ -1,45 +1,51 @@
-# Scaffolding Templates
+# deskspace
 
-Standard files for new Rust monorepos in the rhi ecosystem.
+Unified file workspace server — browse, view, and edit files through a single surface.
 
-## Usage
+## Overview
 
-Copy files to your new repo and replace placeholders:
+Deskspace exposes a workspace directory over HTTP, rendering each file through the
+most appropriate available view — directory listing, syntax-highlighted source,
+rendered Markdown, image preview — selected automatically based on the file's type.
+File browsers and editors have historically been separate tools; deskspace treats that
+separation as artificial. Browsing, viewing, and editing are the same operation on the
+same surface, mediated by projections.
 
-```bash
-# Copy all scaffolding files
-cp -r scaffolding/. ~/git/new-project/
+## Key Ideas
 
-# Replace placeholders
-sed -i 's/PROJECT_NAME/your-project/g' ~/git/new-project/flake.nix
-sed -i 's/PROJECT_DESCRIPTION/Your description/g' ~/git/new-project/flake.nix
-sed -i 's/PROJECT_NAME/your-project/g' ~/git/new-project/docs/package.json
-```
+### Projections
 
-## Files Included
+A projection is a typed view of a resource. Different projections of the same file
+coexist — a Markdown file can be viewed as rendered HTML or as raw text. Projections
+implement a simple trait (`id`, `name`, `confidence`, `project`) and are registered at
+startup; the server dispatches to the highest-confidence match per resource, or the
+client can request a specific one via `?projection=<id>`.
 
-| File | Purpose |
-|------|---------|
-| `.cargo/config.toml` | Target bloat reduction, mold linker hint |
-| `.envrc` | direnv + nix-direnv integration |
-| `.gitignore` | Standard ignores for Rust + Nix + Node |
-| `.githooks/pre-commit` | fmt → clippy (fast checks first) |
-| `.github/workflows/ci.yml` | CI: fmt, clippy, build, test |
-| `.github/workflows/deploy-docs.yml` | VitePress docs to GitHub Pages |
-| `flake.nix` | Nix dev shell with Rust + mold + bun |
-| `docs/package.json` | VitePress with mermaid plugin |
+Built-in projections: directory listing, plain text with syntax hints, Markdown with
+TOC extraction, and image preview.
 
-## Placeholders
+### Workspace safety
 
-- `PROJECT_NAME` - lowercase project name (e.g., `interconnect`)
-- `PROJECT_DESCRIPTION` - short description
+All file access is sandboxed to the workspace root. Path traversal attempts are
+rejected at the boundary, not left to the caller.
 
-## Additional Setup
+### Read and write
 
-After copying, you'll also need:
+`GET` requests view files through projections; `PUT` requests write raw bytes. The API
+is minimal and composable, served by an Axum HTTP server bound to `127.0.0.1` with CSRF
+checks on mutating requests from non-localhost origins.
 
-1. `Cargo.toml` - workspace manifest
-2. `crates/` - your crate(s)
-3. `docs/.vitepress/config.ts` - VitePress config
-4. `docs/index.md` - docs home page
-5. `CLAUDE.md` - project-specific Claude instructions
+## Status
+
+MVP: a working projection-based file browser with workspace sandboxing, the projection
+system, the four built-in projections, and a minimal browser UI. Not yet built: inline
+editor integration, authentication for remote use, runtime plugin loading, and
+workspace-wide search.
+
+## Documentation
+
+Full documentation: https://docs.rhi.zone/deskspace/
+
+## License
+
+Licensed under MIT OR Apache-2.0.

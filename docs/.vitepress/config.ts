@@ -8,10 +8,11 @@ export default withMermaid(
         include: ['mermaid'],
       },
     },
-    title: 'Deskspace',
+    title: 'deskspace',
     description: 'Unified file workspace server',
 
     base: '/deskspace/',
+    srcExclude: ['**/CLAUDE.md'],
 
     themeConfig: {
       nav: [
